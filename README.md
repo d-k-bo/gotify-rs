@@ -1,6 +1,6 @@
 # gotify-rs
 
-[![Build Status](https://github.com/d-k-bo/gotify/workflows/CI/badge.svg)](https://github.com/d-k-bo/gotify/actions?query=workflow%3ACI)
+[![Build Status](https://github.com/d-k-bo/gotify-rs/workflows/CI/badge.svg)](https://github.com/d-k-bo/gotify/actions?query=workflow%3ACI)
 [![Crates.io](https://img.shields.io/crates/v/gotify)](https://lib.rs/crates/gotify)
 [![Documentation](https://img.shields.io/docsrs/gotify)](https://docs.rs/gotify)
 [![License: MIT](https://img.shields.io/crates/l/gotify)](LICENSE)
