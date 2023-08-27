@@ -1,7 +1,9 @@
 #[tokio::main]
 async fn main() -> eyre::Result<()> {
-    let client: gotify::AppClient =
-        gotify::Client::new(env!("GOTIFY_URL"), env!("GOTIFY_APP_TOKEN"))?;
+    let client: gotify::AppClient = gotify::Client::new(
+        &*std::env::var("GOTIFY_URL")?,
+        std::env::var("GOTIFY_APP_TOKEN")?,
+    )?;
 
     client
         .create_message("Lorem ipsum dolor sit amet")
