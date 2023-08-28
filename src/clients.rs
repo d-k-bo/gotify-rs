@@ -6,7 +6,9 @@ use crate::{models::Client, utils::request_builder, ClientClient, Result};
 impl ClientClient {
     /// Return all clients.
     pub async fn get_clients(&self) -> Result<Vec<Client>> {
-        self.request(Method::GET, ["client"]).await
+        self.request(Method::GET, ["client"])
+            .send_and_read_json()
+            .await
     }
     /// Create a client.
     pub fn create_client(&self, name: impl Into<String>) -> ClientBuilder {
@@ -19,6 +21,7 @@ impl ClientClient {
     /// Delete a client.
     pub async fn delete_client(&self, id: i64) -> Result<()> {
         self.request(Method::DELETE, ["client".into(), id.to_string()])
+            .send()
             .await
     }
 }

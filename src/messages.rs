@@ -14,6 +14,7 @@ impl ClientClient {
             Method::DELETE,
             ["application".into(), id.to_string(), "message".into()],
         )
+        .send()
         .await
     }
     /// Return all messages.
@@ -22,11 +23,12 @@ impl ClientClient {
     }
     /// Delete all messages.
     pub async fn delete_messages(&self) -> Result<()> {
-        self.request(Method::DELETE, ["message"]).await
+        self.request(Method::DELETE, ["message"]).send().await
     }
     /// Delete a message with an id.
     pub async fn delete_message(&self, id: i64) -> Result<()> {
         self.request(Method::DELETE, ["message".into(), id.to_string()])
+            .send()
             .await
     }
 }

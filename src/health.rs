@@ -5,7 +5,9 @@ use crate::{models::Health, Client, Result};
 impl<T> Client<T> {
     /// Get health information.
     pub async fn health(&self) -> Result<Health> {
-        self.request(Method::GET, ["health"]).await
+        self.request(Method::GET, ["health"])
+            .send_and_read_json()
+            .await
     }
 }
 

@@ -23,7 +23,7 @@ macro_rules! request_builder {
         method = $method:expr,
         $( uri = $uri:expr, )?
         $( uri_with = $uri_with:expr, )?
-        return_type = $return_type:ty,
+        return_type = $return_type:tt,
         required_fields = {
             $( $( #[ $required_field_attrs:meta ] )* $required_field_name:ident : $required_field_setter_type:ty $( => . $required_field_setter_method:ident() )? => $required_field_type:ty ),* $(,)?
         },
@@ -80,9 +80,13 @@ macro_rules! request_builder {
         impl<'client> $name<'client> {
             #[allow(clippy::redundant_closure_call)]
             pub async fn send(self) -> crate::Result<$return_type> {
-                self.client
-                    .request_with_body($method, $( $uri )? $( $uri_with(&self) )?, Some(self))
-                    .await
+                let r = self.client.request($method, $( $uri )? $( $uri_with(&self) )?);
+                let r = if $method == reqwest::Method::GET {
+                    r.with_query(self)
+                } else {
+                    r.with_json_body(self)
+                };
+                crate::utils::_send_and_match_return_type!(r, $return_type)
             }
         }
         impl<'client> std::future::IntoFuture for $name<'client> {
@@ -96,5 +100,20 @@ macro_rules! request_builder {
     };
 }
 
+#[cfg(any(feature = "app", feature = "client-core"))]
+macro_rules! _send_and_match_return_type {
+    ( $r:ident, () ) => {
+        $r.send().await
+    };
+    ( $r:ident, String ) => {
+        $r.send_and_read_string().await
+    };
+    ( $r:ident, $type:ty ) => {
+        $r.send_and_read_json().await
+    };
+}
+
+#[cfg(any(feature = "app", feature = "client-core"))]
+pub(crate) use _send_and_match_return_type;
 #[cfg(any(feature = "app", feature = "client-core"))]
 pub(crate) use request_builder;

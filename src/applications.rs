@@ -8,7 +8,9 @@ use crate::{models::Application, utils::request_builder, ClientClient, Result};
 impl ClientClient {
     /// Return all applications.
     pub async fn get_applications(&self) -> Result<Vec<Application>> {
-        self.request(Method::GET, ["application"]).await
+        self.request(Method::GET, ["application"])
+            .send_and_read_json()
+            .await
     }
     /// Create an application.
     pub fn create_application(&self, name: impl Into<String>) -> ApplicationBuilder {
@@ -21,6 +23,7 @@ impl ClientClient {
     /// Delete an application.
     pub async fn delete_application(&self, id: i64) -> Result<()> {
         self.request(Method::DELETE, ["application".into(), id.to_string()])
+            .send()
             .await
     }
     /// Upload an image for an application.
@@ -30,12 +33,12 @@ impl ClientClient {
         image_name: impl Into<Cow<'static, str>>,
         image_content: impl Into<Cow<'static, [u8]>>,
     ) -> Result<Application> {
-        self.request_with_binary_body(
+        self.request(
             Method::POST,
             ["application".into(), id.to_string(), "image".into()],
-            image_name,
-            image_content,
         )
+        .with_file(image_name, image_content)
+        .send_and_read_json()
         .await
     }
     /// Delete an image of an application.
@@ -44,6 +47,7 @@ impl ClientClient {
             Method::DELETE,
             ["application".into(), id.to_string(), "image".into()],
         )
+        .send()
         .await
     }
 }

@@ -5,7 +5,9 @@ use crate::{models::VersionInfo, Client, Result};
 impl<T> Client<T> {
     /// Get version information.
     pub async fn version(&self) -> Result<VersionInfo> {
-        self.request(Method::GET, ["version"]).await
+        self.request(Method::GET, ["version"])
+            .send_and_read_json()
+            .await
     }
 }
 

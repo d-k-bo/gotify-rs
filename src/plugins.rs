@@ -6,7 +6,9 @@ use crate::{models::PluginConf, ClientClient, Result};
 impl ClientClient {
     /// Return all plugins.
     pub async fn get_plugins(&self) -> Result<Vec<PluginConf>> {
-        self.request(Method::GET, ["plugin"]).await
+        self.request(Method::GET, ["plugin"])
+            .send_and_read_json()
+            .await
     }
     /// Get YAML configuration for Configurer plugin.
     pub async fn get_plugin_config(&self, id: i64) -> Result<String> {
@@ -14,12 +16,15 @@ impl ClientClient {
             Method::GET,
             ["plugin".into(), id.to_string(), "config".into()],
         )
+        .send_and_read_string()
         .await
     }
     /// Update YAML configuration for Configurer plugin.
     pub async fn update_plugin_config(&self, config: String) -> Result<()> {
-        // TODO: send body as text
-        self.request_with_body(Method::GET, ["user"], config).await
+        self.request(Method::GET, ["user"])
+            .with_string_body(config)
+            .send()
+            .await
     }
     /// Disable a plugin.
     pub async fn disable_plugin(&self, id: i64) -> Result<()> {
@@ -27,6 +32,7 @@ impl ClientClient {
             Method::POST,
             ["plugin".into(), id.to_string(), "disable".into()],
         )
+        .send()
         .await
     }
     /// Get display info for a Displayer plugin.
@@ -35,6 +41,7 @@ impl ClientClient {
             Method::GET,
             ["plugin".into(), id.to_string(), "display".into()],
         )
+        .send_and_read_string()
         .await
     }
     /// Enable a plugin.
@@ -43,6 +50,7 @@ impl ClientClient {
             Method::POST,
             ["plugin".into(), id.to_string(), "enable".into()],
         )
+        .send()
         .await
     }
 }

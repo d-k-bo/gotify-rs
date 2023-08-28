@@ -6,7 +6,9 @@ use crate::{models::User, utils::request_builder, ClientClient, Result};
 impl ClientClient {
     /// Return the current user.
     pub async fn get_current_user(&self) -> Result<User> {
-        self.request(Method::GET, ["current", "user"]).await
+        self.request(Method::GET, ["current", "user"])
+            .send_and_read_json()
+            .await
     }
     /// Update the password of the current user.
     pub fn update_current_user(&self, pass: impl Into<String>) -> UpdateCurrentUserBuilder {
@@ -14,7 +16,9 @@ impl ClientClient {
     }
     /// Return all users.
     pub async fn get_users(&self) -> Result<Vec<User>> {
-        self.request(Method::GET, ["user"]).await
+        self.request(Method::GET, ["user"])
+            .send_and_read_json()
+            .await
     }
     /// Create a user.
     pub fn create_user(
@@ -28,6 +32,7 @@ impl ClientClient {
     /// Get a user.
     pub async fn get_user(&self, id: i64) -> Result<User> {
         self.request(Method::GET, ["user".into(), id.to_string()])
+            .send_and_read_json()
             .await
     }
     /// Update a client.
@@ -37,6 +42,7 @@ impl ClientClient {
     /// Delete a user.
     pub async fn delete_user(&self, id: i64) -> Result<()> {
         self.request(Method::DELETE, ["user".into(), id.to_string()])
+            .send()
             .await
     }
 }

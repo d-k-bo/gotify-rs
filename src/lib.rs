@@ -218,84 +218,76 @@ impl Client<Unauthenticated> {
     }
 }
 
-impl<T> Client<T> {
-    async fn request<R: for<'a> serde::Deserialize<'a> + 'static>(
-        &self,
-        method: Method,
-        uri: impl IntoIterator<Item = impl AsRef<str>>,
-    ) -> Result<R> {
-        let r = self
-            .http
-            .request(method, self.base_url.append(uri))
-            .send()
-            .await?;
-
-        if r.status().is_success() {
-            if std::any::TypeId::of::<R>() == std::any::TypeId::of::<()>() {
-                Ok(serde_json::de::from_str("null").unwrap())
-            } else {
-                Ok(r.json().await?)
-            }
-        } else {
-            Err(Error::Response(r.json().await?))
-        }
+pub(crate) struct RequestBuilder(reqwest::RequestBuilder);
+impl RequestBuilder {
+    #[cfg(any(feature = "app", feature = "client-core"))]
+    pub fn with_query(self, params: impl serde::Serialize) -> Self {
+        Self(self.0.query(&params))
     }
     #[cfg(any(feature = "app", feature = "client-core"))]
-    async fn request_with_body<R: for<'a> serde::Deserialize<'a> + 'static>(
-        &self,
-        method: Method,
-        uri: impl IntoIterator<Item = impl AsRef<str>>,
-        body: impl serde::Serialize,
-    ) -> Result<R> {
-        let r = match method {
-            Method::GET => self
-                .http
-                .request(method, self.base_url.append(uri))
-                .query(&body),
-            _ => self
-                .http
-                .request(method, self.base_url.append(uri))
-                .json(&body),
-        }
-        .send()
-        .await?;
+    pub fn with_json_body(self, body: impl serde::Serialize) -> Self {
+        Self(self.0.json(&body))
+    }
+    #[cfg(feature = "manage-plugins")]
+    pub fn with_string_body(self, body: String) -> Self {
+        Self(self.0.body(body))
+    }
+    #[cfg(feature = "manage-messages")]
+    pub fn with_file(
+        self,
+        file_name: impl Into<std::borrow::Cow<'static, str>>,
+        file_content: impl Into<std::borrow::Cow<'static, [u8]>>,
+    ) -> Self {
+        use reqwest::multipart::{Form, Part};
+
+        Self(
+            self.0.multipart(
+                Form::new().part("file", Part::bytes(file_content).file_name(file_name)),
+            ),
+        )
+    }
+}
+impl RequestBuilder {
+    #[cfg(feature = "client-core")]
+    pub async fn send(self) -> Result<()> {
+        let r = self.0.send().await?;
 
         if r.status().is_success() {
-            if std::any::TypeId::of::<R>() == std::any::TypeId::of::<()>() {
-                Ok(serde_json::de::from_str("null").unwrap())
-            } else {
-                Ok(r.json().await?)
-            }
+            Ok(())
         } else {
             Err(Error::Response(r.json().await?))
         }
     }
-    #[cfg(feature = "manage-messages")]
-    async fn request_with_binary_body<R: for<'a> serde::Deserialize<'a> + 'static>(
-        &self,
-        method: Method,
-        uri: impl IntoIterator<Item = impl AsRef<str>>,
-        file_name: impl Into<std::borrow::Cow<'static, str>>,
-        file_content: impl Into<std::borrow::Cow<'static, [u8]>>,
+    pub async fn send_and_read_json<R: for<'a> serde::Deserialize<'a> + 'static>(
+        self,
     ) -> Result<R> {
-        use reqwest::multipart::{Form, Part};
-
-        let r = self
-            .http
-            .request(method, self.base_url.append(uri))
-            .multipart(Form::new().part("file", Part::bytes(file_content).file_name(file_name)))
-            .send()
-            .await?;
+        let r = self.0.send().await?;
 
         if r.status().is_success() {
-            if std::any::TypeId::of::<R>() == std::any::TypeId::of::<()>() {
-                Ok(serde_json::de::from_str("null").unwrap())
-            } else {
-                Ok(r.json().await?)
-            }
+            Ok(r.json().await?)
         } else {
             Err(Error::Response(r.json().await?))
         }
+    }
+    #[cfg(feature = "manage-plugins")]
+    pub async fn send_and_read_string(self) -> Result<String> {
+        let r = self.0.send().await?;
+
+        if r.status().is_success() {
+            Ok(r.text().await?)
+        } else {
+            Err(Error::Response(r.json().await?))
+        }
+    }
+}
+
+impl<T> Client<T> {
+    pub(crate) fn request(
+        &self,
+        method: Method,
+        uri: impl IntoIterator<Item = impl AsRef<str>>,
+    ) -> RequestBuilder {
+        RequestBuilder(self.http.request(method, self.base_url.append(uri)))
     }
 }
 
