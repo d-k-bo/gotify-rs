@@ -40,6 +40,7 @@
 //! ```
 
 #![warn(missing_docs)]
+#![cfg_attr(docsrs, feature(doc_cfg))]
 
 use std::marker::PhantomData;
 
@@ -53,6 +54,7 @@ use crate::utils::UrlAppend;
 
 pub use crate::error::{Error, InitError, Result};
 #[cfg(feature = "websocket")]
+#[cfg_attr(docsrs, doc(cfg(feature = "websocket")))]
 pub use crate::websocket::{WebsocketConnectError, WebsocketError};
 
 pub mod models;
@@ -63,33 +65,45 @@ pub mod models;
 /// [`IntoFuture`](std::future::IntoFuture) and can be `await`ed directly.
 pub mod builder {
     #[cfg(feature = "app")]
+    #[cfg_attr(docsrs, doc(cfg(feature = "app")))]
     pub use crate::app::MessageBuilder;
     #[cfg(feature = "manage-applications")]
+    #[cfg_attr(docsrs, doc(cfg(feature = "manage-applications")))]
     pub use crate::applications::{ApplicationBuilder, ApplicationUpdateBuilder};
     #[cfg(feature = "manage-clients")]
+    #[cfg_attr(docsrs, doc(cfg(feature = "manage-clients")))]
     pub use crate::clients::{ClientBuilder, ClientUpdateBuilder};
     #[cfg(feature = "manage-messages")]
+    #[cfg_attr(docsrs, doc(cfg(feature = "manage-messages")))]
     pub use crate::messages::{GetApplicationMessagesBuilder, GetMessagesBuilder};
     #[cfg(feature = "manage-users")]
+    #[cfg_attr(docsrs, doc(cfg(feature = "manage-users")))]
     pub use crate::users::{CreateUserBuilder, UpdateCurrentUserBuilder, UpdateUserBuilder};
 }
 
 #[cfg(feature = "app")]
+#[cfg_attr(docsrs, doc(cfg(feature = "app")))]
 mod app;
 #[cfg(feature = "manage-applications")]
+#[cfg_attr(docsrs, doc(cfg(feature = "manage-applications")))]
 mod applications;
 #[cfg(feature = "manage-clients")]
+#[cfg_attr(docsrs, doc(cfg(feature = "manage-clients")))]
 mod clients;
 mod error;
 mod health;
 #[cfg(feature = "manage-messages")]
+#[cfg_attr(docsrs, doc(cfg(feature = "manage-messages")))]
 mod messages;
 #[cfg(feature = "manage-plugins")]
+#[cfg_attr(docsrs, doc(cfg(feature = "manage-plugins")))]
 mod plugins;
 #[cfg(feature = "manage-users")]
+#[cfg_attr(docsrs, doc(cfg(feature = "manage-users")))]
 mod users;
 mod version;
 #[cfg(feature = "websocket")]
+#[cfg_attr(docsrs, doc(cfg(feature = "websocket")))]
 mod websocket;
 
 #[cfg(test)]
@@ -114,10 +128,12 @@ pub struct Client<T> {
 
 /// A client that is authenticated to create messages.
 #[cfg(feature = "app")]
+#[cfg_attr(docsrs, doc(cfg(feature = "app")))]
 pub type AppClient = Client<AppToken>;
 
 /// A client that is authenticated to manage the server.
 #[cfg(feature = "client-core")]
+#[cfg_attr(docsrs, doc(cfg(feature = "client-core")))]
 pub type ClientClient = Client<ClientToken>;
 
 /// A client that is unauthenticated.
@@ -125,11 +141,13 @@ pub type UnauthenticatedClient = Client<Unauthenticated>;
 
 /// Marks a client as authenticated to create messages.
 #[cfg(feature = "app")]
+#[cfg_attr(docsrs, doc(cfg(feature = "app")))]
 #[derive(Clone, Debug)]
 pub struct AppToken;
 
 /// Marks a client as authenticated to manage the server.
 #[cfg(feature = "client-core")]
+#[cfg_attr(docsrs, doc(cfg(feature = "client-core")))]
 #[derive(Clone, Debug)]
 pub struct ClientToken;
 
@@ -141,22 +159,27 @@ pub struct Unauthenticated;
 pub trait TokenType: private::Sealed {}
 
 #[cfg(feature = "app")]
+#[cfg_attr(docsrs, doc(cfg(feature = "app")))]
 impl TokenType for AppToken {}
 
 #[cfg(feature = "client-core")]
+#[cfg_attr(docsrs, doc(cfg(feature = "client-core")))]
 impl TokenType for ClientToken {}
 
 mod private {
     pub trait Sealed {}
 
     #[cfg(feature = "app")]
+    #[cfg_attr(docsrs, doc(cfg(feature = "app")))]
     impl Sealed for super::AppToken {}
 
     #[cfg(feature = "client-core")]
+    #[cfg_attr(docsrs, doc(cfg(feature = "client-core")))]
     impl Sealed for super::ClientToken {}
 }
 
 #[cfg(any(feature = "app", feature = "client-core"))]
+#[cfg_attr(docsrs, doc(cfg(any(feature = "app", feature = "client-core"))))]
 impl<T: TokenType> Client<T> {
     /// Create a new authenticated client.
     ///

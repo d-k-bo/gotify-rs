@@ -4,6 +4,7 @@
 use serde::{Deserialize, Serialize};
 
 #[cfg(feature = "manage-applications")]
+#[cfg_attr(docsrs, doc(cfg(feature = "manage-applications")))]
 #[derive(Debug, Deserialize, Serialize)]
 #[serde(rename_all = "camelCase")]
 pub struct Application {
@@ -17,6 +18,7 @@ pub struct Application {
 }
 
 #[cfg(feature = "manage-clients")]
+#[cfg_attr(docsrs, doc(cfg(feature = "manage-clients")))]
 #[derive(Debug, Deserialize, Serialize)]
 pub struct Client {
     pub id: i64,
@@ -49,6 +51,10 @@ pub struct Health {
 }
 
 #[cfg(any(feature = "app", feature = "manage-messages", feature = "websocket"))]
+#[cfg_attr(
+    docsrs,
+    doc(cfg(any(feature = "app", feature = "manage-messages", feature = "websocket")))
+)]
 #[derive(Debug, Deserialize, Serialize)]
 #[serde(rename_all = "camelCase")]
 pub struct Message {
@@ -63,6 +69,7 @@ pub struct Message {
 }
 
 #[cfg(feature = "manage-messages")]
+#[cfg_attr(docsrs, doc(cfg(feature = "manage-messages")))]
 #[derive(Debug, Deserialize, Serialize)]
 pub struct PagedMessages {
     pub messages: Vec<Message>,
@@ -70,6 +77,7 @@ pub struct PagedMessages {
 }
 
 #[cfg(feature = "manage-messages")]
+#[cfg_attr(docsrs, doc(cfg(feature = "manage-messages")))]
 #[derive(Debug, Deserialize, Serialize)]
 pub struct Paging {
     pub limit: usize,
@@ -79,6 +87,7 @@ pub struct Paging {
 }
 
 #[cfg(feature = "manage-plugins")]
+#[cfg_attr(docsrs, doc(cfg(feature = "manage-plugins")))]
 #[derive(Debug, Deserialize, Serialize)]
 #[serde(rename_all = "camelCase")]
 pub struct PluginConf {
@@ -94,6 +103,7 @@ pub struct PluginConf {
 }
 
 #[cfg(feature = "manage-users")]
+#[cfg_attr(docsrs, doc(cfg(feature = "manage-users")))]
 #[derive(Debug, Deserialize, Serialize)]
 pub struct User {
     pub admin: bool,

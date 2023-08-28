@@ -56,3 +56,8 @@ futures-util = "0.3.28"
 macro_rules_attribute = "0.2.0"
 tokio = { version = "1.21.2", features = ["macros", "rt-multi-thread", "time"] }
 zip = { version = "0.6.6", default-features = false, features = ["deflate"] }
+
+# see https://stackoverflow.com/a/61417700/14750360
+[package.metadata.docs.rs]
+all-features = true
+rustdoc-args = ["--cfg", "docsrs"]
