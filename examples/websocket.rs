@@ -6,7 +6,7 @@ async fn main() -> eyre::Result<()> {
         &*std::env::var("GOTIFY_URL")?,
         std::env::var("GOTIFY_CLIENT_TOKEN")?,
     )?;
-    let mut messages = client.message_stream().await?;
+    let mut messages = client.stream_messages().await?;
     while let Some(result) = messages.next().await {
         let message = result?;
         println!("{message:#?}")

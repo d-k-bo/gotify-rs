@@ -10,7 +10,7 @@ use crate::{models::Message, utils::UrlAppend, ClientClient};
 /// Subscribe to newly created messages.
 impl ClientClient {
     /// Return newly created messages via a websocket.
-    pub async fn message_stream(
+    pub async fn stream_messages(
         &self,
     ) -> Result<impl Stream<Item = Result<Message, WebsocketError>> + '_, WebsocketConnectError>
     {
@@ -100,13 +100,13 @@ pub(crate) mod tests {
 
     #[apply(run_test_server!)]
     #[test]
-    async fn message_stream() -> eyre::Result<()> {
+    async fn stream_messages() -> eyre::Result<()> {
         use futures_util::StreamExt;
 
         let app_client = app_client();
         let client_client = client_client();
 
-        let mut stream = client_client.message_stream().await?;
+        let mut stream = client_client.stream_messages().await?;
 
         for i in 1..=10 {
             let msg = format!("message-{i}");

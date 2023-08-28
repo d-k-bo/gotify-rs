@@ -22,10 +22,10 @@ All other categories of endpoints must be enabled by the corresponding feature f
 | `app` | `Client::create_message()` | |
 | `manage-applications` | `Client::get_applications()`, `Client::create_application()`, `Client::update_application()`, `Client::delete_application()`, `Client::delete_application_image()` | |
 | `manage-clients` | `Client::get_clients()`, `Client::create_client()`, `Client::update_client()`, `Client::delete_client()` | |
-| `manage-messages` | `Client::get_application_messages()`, `Client::delete_application_messages()`, `Client::get_messages()`, `Client::delete_messages()`, `Client::delete_message()` | doesn't include `Client::create_message()` and `Client::message_stream()` |
+| `manage-messages` | `Client::get_application_messages()`, `Client::delete_application_messages()`, `Client::get_messages()`, `Client::delete_messages()`, `Client::delete_message()` | doesn't include `Client::create_message()` and `Client::stream_messages()` |
 | `manage-plugins` | `Client::get_plugins()`, `Client::get_plugin_config()`, `Client::update_plugin_config()`, `Client::disable_plugin()`, `Client::get_plugin_display()`, `Client::enable_plugin()` | |
 | `manage-users` | `Client::get_current_user()`, `Client::update_current_user()`, `Client::get_users()`, `Client::get_user()`, `Client::update_user()`, `Client::delete_user()` | |
-| `websocket` | `Client::message_stream()` | enables additional dependencies (mainly [`tokio-tungstenite`](https://docs.rs/tokio-tungstenite)) |
+| `websocket` | `Client::stream_messages()` | enables additional dependencies (mainly [`tokio-tungstenite`](https://docs.rs/tokio-tungstenite)) |
 
 </details>
 
@@ -54,7 +54,7 @@ use futures_util::StreamExt;
 
 let client: gotify::ClientClient = gotify::Client::new(GOTIFY_URL, GOTIFY_CLIENT_TOKEN)?;
 
-let mut messages = client.message_stream().await?;
+let mut messages = client.stream_messages().await?;
 
 while let Some(result) = messages.next().await {
     let message = result?;

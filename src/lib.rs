@@ -13,10 +13,10 @@
 //! | `app` | [`Client::create_message()`](crate::Client::create_message) | |
 //! | `manage-applications` | [`Client::get_applications()`](crate::Client::get_applications), [`Client::create_application()`](crate::Client::create_application), [`Client::update_application()`](crate::Client::update_application), [`Client::delete_application()`](crate::Client::delete_application), [`Client::delete_application_image()`](crate::Client::delete_application_image) | |
 //! | `manage-clients` | [`Client::get_clients()`](crate::Client::get_clients), [`Client::create_client()`](crate::Client::create_client), [`Client::update_client()`](crate::Client::update_client), [`Client::delete_client()`](crate::Client::delete_client) | |
-//! | `manage-messages` | [`Client::get_application_messages()`](crate::Client::get_application_messages), [`Client::delete_application_messages()`](crate::Client::delete_application_messages), [`Client::get_messages()`](crate::Client::get_messages), [`Client::delete_messages()`](crate::Client::delete_messages), [`Client::delete_message()`](crate::Client::delete_message) | doesn't include [`Client::create_message()`](crate::Client::create_message) and [`Client::message_stream()`](crate::Client::message_stream) |
+//! | `manage-messages` | [`Client::get_application_messages()`](crate::Client::get_application_messages), [`Client::delete_application_messages()`](crate::Client::delete_application_messages), [`Client::get_messages()`](crate::Client::get_messages), [`Client::delete_messages()`](crate::Client::delete_messages), [`Client::delete_message()`](crate::Client::delete_message) | doesn't include [`Client::create_message()`](crate::Client::create_message) and [`Client::stream_messages()`](crate::Client::stream_messages) |
 //! | `manage-plugins` | [`Client::get_plugins()`](crate::Client::get_plugins), [`Client::get_plugin_config()`](crate::Client::get_plugin_config), [`Client::update_plugin_config()`](crate::Client::update_plugin_config), [`Client::disable_plugin()`](crate::Client::disable_plugin), [`Client::get_plugin_display()`](crate::Client::get_plugin_display), [`Client::enable_plugin()`](crate::Client::enable_plugin) | |
 //! | `manage-users` | [`Client::get_current_user()`](crate::Client::get_current_user), [`Client::update_current_user()`](crate::Client::update_current_user), [`Client::get_users()`](crate::Client::get_users), [`Client::get_user()`](crate::Client::get_user), [`Client::update_user()`](crate::Client::update_user), [`Client::delete_user()`](crate::Client::delete_user) | |
-//! | `websocket` | [`Client::message_stream()`](crate::Client::message_stream) | enables additional dependencies (mainly [`tokio-tungstenite`](https://docs.rs/tokio-tungstenite)) |
+//! | `websocket` | [`Client::stream_messages()`](crate::Client::stream_messages) | enables additional dependencies (mainly [`tokio-tungstenite`](https://docs.rs/tokio-tungstenite)) |
 //!
 //! </details>
 //!
@@ -45,7 +45,7 @@
 //!
 //! let client: gotify::ClientClient = gotify::Client::new(GOTIFY_URL, GOTIFY_CLIENT_TOKEN)?;
 //!
-//! let mut messages = client.message_stream().await?;
+//! let mut messages = client.stream_messages().await?;
 //!
 //! while let Some(result) = messages.next().await {
 //!     let message = result?;
