@@ -10,7 +10,7 @@ categories = ["api-bindings"]
 keywords = ["gotify", "notify", "notifications", "push-notifications"]
 
 [features]
-default = []
+default = ["native-tls"]
 # Enable all features
 full = ["app", "client"]
 # Create messages
@@ -37,12 +37,16 @@ manage-plugins = ["client-core"]
 manage-users = ["client-core"]
 # Subscribe to newly created messages via a websocket
 websocket = ["client-core", "dep:async-stream", "dep:futures-util", "dep:tokio-tungstenite"]
+# Enable the `native-tls` feature on reqwest
+native-tls = ["reqwest/native-tls"]
+# Enable the `rustls-tls` feature on reqwest
+rustls-tls = ["reqwest/rustls-tls"]
 
 [dependencies]
 async-stream = { version = "0.3.5", optional = true }
 futures-util = { version = "0.3.28", optional = true }
 paste = "1.0.14"
-reqwest = { version = "0.11.12", features = ["json", "multipart"] }
+reqwest = { version = "0.11.12", features = ["json", "multipart"], default-features = false }
 serde = { version = "1.0.145", features = ["derive"] }
 serde_json = "1.0.86"
 thiserror = "1.0.37"
