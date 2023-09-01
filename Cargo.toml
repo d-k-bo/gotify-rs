@@ -1,6 +1,6 @@
 [package]
 name = "gotify"
-version = "0.2.0"
+version = "0.3.0"
 edition = "2021"
 description = "Idiomatic client for the Gotify API"
 repository = "https://github.com/d-k-bo/gotify-rs"
