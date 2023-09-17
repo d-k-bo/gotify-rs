@@ -1,0 +1,17 @@
+[[pre-release-replacements]]
+file = "CHANGELOG.md"
+search = "## \\[Unreleased\\]"
+replace = """## [Unreleased]\n\n## [{{version}}] - {{date}}"""
+exactly = 1
+
+[[pre-release-replacements]]
+file = "CHANGELOG.md"
+search = "\\.\\.\\.HEAD"
+replace = "...{{tag_name}}"
+exactly = 1
+
+[[pre-release-replacements]]
+file = "CHANGELOG.md"
+search = "\\[Unreleased\\]: "
+replace = """[Unreleased]: https://github.com/d-k-bo/gotify-rs/compare/{{tag_name}}...HEAD\n[{{version}}]: """
+exactly = 1
