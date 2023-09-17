@@ -7,6 +7,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+## [0.4.0] - 2023-09-17
+
 ### Added
 
 - Add last_used field for applications and clients (introduced in Gotify 2.4.0)
@@ -36,7 +38,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 - Initial release
 
-[Unreleased]: https://github.com/d-k-bo/gotify-rs/compare/v0.3.0...HEAD
+[Unreleased]: https://github.com/d-k-bo/gotify-rs/compare/v0.4.0...HEAD
+[0.4.0]: https://github.com/d-k-bo/gotify-rs/compare/v0.3.0...v0.4.0
 [0.3.0]: https://github.com/d-k-bo/gotify-rs/compare/v0.2.0...v0.3.0
 [0.2.0]: https://github.com/d-k-bo/gotify-rs/compare/v0.1.0...v0.2.0
 [0.1.0]: https://github.com/d-k-bo/gotify-rs/releases/tag/v0.0.1
