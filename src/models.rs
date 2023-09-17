@@ -14,6 +14,8 @@ pub struct Application {
     pub id: i64,
     pub image: String,
     pub internal: bool,
+    #[serde(default, with = "time::serde::iso8601::option")]
+    pub last_used: Option<time::OffsetDateTime>,
     pub name: String,
     pub token: String,
 }
@@ -24,6 +26,8 @@ pub struct Application {
 #[non_exhaustive]
 pub struct Client {
     pub id: i64,
+    #[serde(default, with = "time::serde::iso8601::option")]
+    pub last_used: Option<time::OffsetDateTime>,
     pub name: String,
     pub token: String,
 }
